@@ -1,9 +1,5 @@
-require 'polywag/engine'
-
 module Polywag
   module ControllerAdditions
-    extend ActiveSupport::Concern
-
     def find_and_authorize_nester(nesters)
       nester = find_nester(nesters)
       authorize! :nested_actions, nester if nester
@@ -44,15 +40,15 @@ module Polywag
     end
 
     def member_id
-      params[:id]
+      polywag_path_parameters[:id]
     end
 
     def nester_id(nester_name)
-      params["#{nester_name}_id"]
+      polywag_path_parameters["#{nester_name.to_s.underscore}_id"]
     end
 
     def current_action
-      params[:action]
+      polywag_path_parameters[:action]
     end
 
     def find_nester(nesters)
@@ -71,5 +67,16 @@ module Polywag
         member.send("#{nester.class.name.underscore}=", nil)
       end
     end
+
+    def polywag_path_parameters
+      # this separate method allows easier overriding
+      request.path_parameters.with_indifferent_access
+    end
+  end
+end
+
+if defined? ActionController::Base
+  ActionController::Base.class_eval do
+    include Polywag::ControllerAdditions
   end
 end
