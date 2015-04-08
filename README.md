@@ -3,7 +3,7 @@ Installation
 Just add the following to your Gemfile:
 
 ```ruby
-gem 'polywag', git: 'git@bitbucket.org:cteh/polywag.git'
+gem 'polywag', git: 'git@github.com:CTEH/polywag.git'
 ```
 
 You can lock it to a specific release of polywag by using tags. Then, bundle install.
